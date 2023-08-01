@@ -49,3 +49,8 @@
         owner: root
         group: root
         mode: 0755
+
+    - name: Make sure distributed node is running
+      ansible.builtin.systemd:
+        state: started
+        name: distributed_node
