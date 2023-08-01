@@ -17,6 +17,7 @@ resource "aws_security_group" "sg_ssh_access" {
   name = "ssh_access"
   description = "Allow ssh traffic into the ssh bastion instance"
 
+
   ingress {
     from_port = 22
     to_port   = 22
@@ -69,7 +70,8 @@ resource "aws_instance" "app_server" {
   ]
 
   tags = {
-    Name = "distributed_erlang:test"
+    Name = "my-machine-${count.index}"
+    Cluster = "elixir-cluster"
   }
 }
 
