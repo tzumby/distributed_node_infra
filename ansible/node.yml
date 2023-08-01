@@ -1,0 +1,16 @@
+---
+- hosts: nodes
+  become: true
+  vars:
+    users:
+      - name: tzumby
+        # generated using openssl passwd -salt <salt> -1 <plaintext>
+        password: '$1$testingt$cUm94st/Mxuw/PHyun8lp0'
+        pub_keys:
+          - templates/users/tzumby/key.pub
+    sysctl_overwrite:
+      # Enable IPv4 traffic forwarding.
+      net.ipv4.ip_forward: 1
+  roles:
+    - users
+

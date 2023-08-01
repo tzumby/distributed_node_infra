@@ -1,0 +1,16 @@
+---
+  - name: Add or update user and set password
+    action: user name={{ item.name }}
+                  password={{ item.password }}
+                  shell=/bin/bash
+                  groups=admin
+    with_items: '{{ users }}'
+  - name: Change user directory permissions to 750
+    file: path=/home/{{ item.name }} state=directory mode=750
+    with_items: '{{ users }}'
+
+  - name: Add or update authorized key
+    action: authorized_key user={{ item.0.name }} key={{ lookup('file', item.1) }}
+    with_subelements:
+      - '{{ users }}'
+      - pub_keys

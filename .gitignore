@@ -1,0 +1,5 @@
+*.hcl
+.terraform
+*.tfstate
+*.tfstate.backup
+ansible/inventory/*
