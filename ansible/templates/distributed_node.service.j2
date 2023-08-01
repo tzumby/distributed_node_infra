@@ -1,0 +1,14 @@
+[Unit]
+Description=Distributed node
+
+[Service]
+User=tzumby
+Group=tzumby
+Type=notify
+EnvironmentFile=/etc/distributed_node_env
+ExecStart=/opt/bin/distributed_node start
+WatchdogSec=10s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
