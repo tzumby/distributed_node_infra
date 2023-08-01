@@ -1,14 +1,17 @@
 [Unit]
 Description=Distributed node
+After=network.target
+Requires=network.target
 
 [Service]
 User=tzumby
 Group=tzumby
-Type=notify
+Type=forking
 EnvironmentFile=/etc/distributed_node_env
 ExecStart=/opt/bin/distributed_node start
 WatchdogSec=10s
-Restart=on-failure
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
