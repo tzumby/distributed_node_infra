@@ -21,7 +21,7 @@
   tasks:
     - name: Upload application
       ansible.builtin.unarchive:
-        src: /home/tzumby/distributed_node/_build/dev/distributed_node-0.1.0.tar.gz
+        src: /home/tzumby/distributed_node/_build/prod/distributed_node-0.1.0.tar.gz
         dest: /opt
 
     - name: Add AWS variables to bashrc
@@ -53,4 +53,13 @@
     - name: Make sure distributed node is running
       ansible.builtin.systemd:
         state: started
+        daemon_reload: true
         name: distributed_node
+
+    - name: Make sure distributed node is running
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: true
+        name: distributed_node
+      tags:
+        - restart

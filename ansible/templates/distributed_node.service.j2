@@ -6,11 +6,11 @@ Requires=network.target
 [Service]
 User=tzumby
 Group=tzumby
-Type=forking
+Type=simple
 EnvironmentFile=/etc/distributed_node_env
 ExecStart=/opt/bin/distributed_node start
-WatchdogSec=10s
-Restart=always
+WatchdogSec=3600s
+Restart=never
 RestartSec=5
 
 [Install]

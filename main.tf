@@ -33,6 +33,13 @@ resource "aws_security_group" "sg_ssh_access" {
   }
 
   ingress {
+    from_port = 41234
+    to_port   = 41234
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port = 9100
     to_port   = 9155
     protocol  = "tcp"
@@ -59,7 +66,7 @@ resource "aws_security_group" "sg_ssh_access" {
 }
 
 resource "aws_instance" "app_server" {
-  count         = 10
+  count         = 4
   ami           = "ami-024e6efaf93d85776"
   instance_type = "t2.micro"
   associate_public_ip_address = true
@@ -71,7 +78,7 @@ resource "aws_instance" "app_server" {
 
   tags = {
     Name = "my-machine-${count.index}"
-    Cluster = "elixir-cluster"
+    Cluster = "partisan"
   }
 }
 
