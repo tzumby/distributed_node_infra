@@ -6,6 +6,10 @@
     prompt: Enter AWS_ACCESS_KEY_ID
   - name: aws_secret_access_key
     prompt: Enter AWS_SECRET_ACCESS_KEY
+  - name: rabbitmq_url
+    prompt: Enter RABBITMQ_URL
+  - name: appsignal_api_key
+    prompt: Enter APPSIGNAL_API_KEY
   vars:
     users:
       - name: tzumby
@@ -30,6 +34,8 @@
         block: |
           export AWS_ACCESS_KEY_ID={{ aws_access_key_id  }}
           export AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+          export RABBITMQ_URL={{ rabbitmq_url }}
+          export APPSIGNAL_API_KEY={{ appsignal_api_key }}
         marker: '# {mark} ANSIBLE MANAGED BLOCK - virtualenv'
         insertbefore: BOF
         create: yes
