@@ -59,4 +59,6 @@
     - name: Make sure distributed node is running
       ansible.builtin.systemd:
         state: started
+        enabled: true
+        no_block: true
         name: distributed_node
