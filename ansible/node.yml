@@ -1,6 +1,7 @@
 ---
 - hosts: nodes
   become: true
+  gather_facts: False
   vars_prompt:
   - name: aws_access_key_id
     prompt: Enter AWS_ACCESS_KEY_ID
@@ -8,8 +9,6 @@
     prompt: Enter AWS_SECRET_ACCESS_KEY
   - name: rabbitmq_url
     prompt: Enter RABBITMQ_URL
-  - name: appsignal_api_key
-    prompt: Enter APPSIGNAL_API_KEY
   vars:
     users:
       - name: tzumby
@@ -20,22 +19,88 @@
     sysctl_overwrite:
       # Enable IPv4 traffic forwarding.
       net.ipv4.ip_forward: 1
-  roles:
-    - users
+        #roles:
+        #  - users
+    apps:
+      - app
+      - app1
+      - app2
+      - app3
+      - app4
+      - app5
+      - app6
+      - app7
+      - app8
+      - app9
+      - app10
+      - app11
+      - app12
+      - app13
+      - app14
+      - app15
+      - app16
+      - app17
+      - app18
+      - app19
+      - app20
+      - app21
+      - app22
+      - app23
+      - app24
+      - app25
+      - app26
+      - app27
+      - app28
+      - app29
+      - app30
+      - app31
+      - app32
+      - app33
+      - app34
+      - app35
+      - app36
+      - app37
+      - app38
+      - app39
+      - app40
+      - app41
+      - app42
+      - app43
+      - app44
+      - app45
+      - app46
+      - app47
+      - app48
+      - app49
+      - app50
+      - app51
+      - app52
+      - app53
+      - app54
+      - app55
+      - app56
+      - app57
+      - app58
+      - app59
+      - app60
+      - app61
+      - app62
+      - app63
   tasks:
     - name: Upload application
       ansible.builtin.unarchive:
-        src: /home/tzumby/distributed_node/_build/dev/distributed_node-0.1.0.tar.gz
+        src: /home/tzumby/distributed_node/_build/prod/distributed_node-0.1.0.tar.gz
         dest: /opt
+      tags:
+        - update
 
     - name: Add AWS variables to bashrc
       ansible.builtin.blockinfile:
-        dest: "/home/tzumby/.bashrc"
+        dest: "/home/ubuntu/.bashrc"
         block: |
           export AWS_ACCESS_KEY_ID={{ aws_access_key_id  }}
           export AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
           export RABBITMQ_URL={{ rabbitmq_url }}
-          export APPSIGNAL_API_KEY={{ appsignal_api_key }}
         marker: '# {mark} ANSIBLE MANAGED BLOCK - virtualenv'
         insertbefore: BOF
         create: yes
@@ -43,22 +108,42 @@
     - name: template systemd unit file
       ansible.builtin.template:
         src: templates/distributed_node.service.j2
-        dest: /etc/systemd/system/distributed_node.service
+        dest: "/etc/systemd/system/distributed_node_{{ item }}.service"
         owner: root
         group: root
         mode: 0755
+      with_items: 
+        - "{{ apps }}"
 
     - name: template systemd unit file
       ansible.builtin.template:
         src: templates/distributed_node_env.j2
-        dest: /etc/distributed_node_env
+        dest: "/etc/distributed_node_env_{{ item }}"
         owner: root
         group: root
         mode: 0755
+      with_items: 
+        - "{{ apps }}"
 
     - name: Make sure distributed node is running
       ansible.builtin.systemd:
         state: started
+        daemon-reload: true
+        name: "distributed_node_{{ item }}"
         enabled: true
         no_block: true
-        name: distributed_node
+      tags:
+        - update
+      with_items: 
+        - "{{ apps }}"
+
+    - name: Restart node
+      ansible.builtin.systemd:
+        name: "distributed_node_{{item}}"
+        state: restarted
+        no_block: true
+      tags:
+        - restart
+        - update
+      with_items: 
+        - "{{ apps }}"

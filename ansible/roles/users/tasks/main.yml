@@ -5,6 +5,7 @@
                   shell=/bin/bash
                   groups=admin
     with_items: '{{ users }}'
+
   - name: Change user directory permissions to 750
     file: path=/home/{{ item.name }} state=directory mode=750
     with_items: '{{ users }}'

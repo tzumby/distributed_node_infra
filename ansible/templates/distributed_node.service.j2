@@ -4,12 +4,12 @@ After=network.target
 Requires=network.target
 
 [Service]
-User=tzumby
-Group=tzumby
-Type=forking
-EnvironmentFile=/etc/distributed_node_env
+User=ubuntu
+Group=ubuntu
+Type=simple
+EnvironmentFile=/etc/distributed_node_env_{{item}}
 ExecStart=/opt/bin/distributed_node start
-WatchdogSec=60s
+WatchdogSec=3600s
 Restart=always
 RestartSec=5
 
