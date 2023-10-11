@@ -59,7 +59,7 @@ resource "aws_security_group" "sg_ssh_access" {
 }
 
 resource "aws_instance" "app_server" {
-  count         = 10
+  count         = 2
   ami           = "ami-024e6efaf93d85776"
   instance_type = "t2.micro"
   associate_public_ip_address = true
@@ -68,6 +68,11 @@ resource "aws_instance" "app_server" {
   security_groups = [
     aws_security_group.sg_ssh_access.name
   ]
+
+  private_dns_name_options = {
+    hostname_type = "ip-name"
+    enable_resource_name_dns_a_record = true
+  }
 
   tags = {
     Name = "my-machine-${count.index}"
