@@ -20,6 +20,7 @@ resource "aws_instance" "private_node" {
   instance_type = "t2.micro"
   subnet_id     = "${aws_subnet.private.id}"
   key_name      = "raz"
+  count         = 2
 
   associate_public_ip_address = false
 
