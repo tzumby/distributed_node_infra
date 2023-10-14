@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
   profile = "nl"
   shared_credentials_files = ["/Users/tzumby/.aws/credentials"]
   shared_config_files = ["/Users/tzumby/.aws/config"]

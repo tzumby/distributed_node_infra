@@ -1,7 +1,9 @@
 variable "multicast_group_members" {
   default = {
-    eni-01fa27c13406241bd = "224.0.0.10"
-    eni-099d183b14d6e9273 = "224.0.0.10"
+    eni-048adeb21130010b8  = "224.0.0.10"
+    eni-0b6e0b540348bbc53  = "224.0.0.10"
+    #eni-01fa27c13406241bd = "224.0.0.10"
+    #eni-099d183b14d6e9273 = "224.0.0.10"
   }
 }
 

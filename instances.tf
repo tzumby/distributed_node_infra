@@ -1,6 +1,6 @@
 resource "aws_instance" "ssh_bastion" {
-  ami           = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
+  ami           = "ami-024e6efaf93d85776"
+  instance_type = "t3.micro"
   subnet_id     = "${aws_subnet.public.id}"
   key_name      = "raz"
 
@@ -16,8 +16,8 @@ resource "aws_instance" "ssh_bastion" {
 }
 
 resource "aws_instance" "private_node" {
-  ami           = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
+  ami           = "ami-024e6efaf93d85776"
+  instance_type = "t3.micro"
   subnet_id     = "${aws_subnet.private.id}"
   key_name      = "raz"
   count         = 2
