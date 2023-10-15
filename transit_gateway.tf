@@ -2,10 +2,6 @@ locals {
     enis = { for val in aws_network_interface.eni : "${val.id}" => "224.0.0.10" }
 }
 
-#variable "multicast_group_members" {
-#    default = { for val in aws_network_interface.eni : "${val.id}" => "224.0.0.10" }
-#}
-
 module "txgw-multicast" {
   source = "git::https://github.com/fstuck37/terraform-aws-txgw-multicast.git"
   region                          = "us-east-1"

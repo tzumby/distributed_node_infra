@@ -1,0 +1,76 @@
+---
+- hosts: nodes
+  become: true
+  gather_facts: False
+  vars_prompt:
+  - name: aws_access_key_id
+    prompt: Enter AWS_ACCESS_KEY_ID
+  - name: aws_secret_access_key
+    prompt: Enter AWS_SECRET_ACCESS_KEY
+  - name: rabbitmq_url
+    prompt: Enter RABBITMQ_URL
+  tasks:
+    - name: Upload application
+      ansible.builtin.unarchive:
+        src: /home/tzumby/distributed_node/_build/prod/distributed_node-0.1.0.tar.gz
+        dest: /opt
+      tags:
+        - update
+
+    - name: Add AWS variables to bashrc
+      ansible.builtin.blockinfile:
+        dest: "/home/ubuntu/.bashrc"
+        block: |
+          export AWS_ACCESS_KEY_ID={{ aws_access_key_id  }}
+          export AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+          export RABBITMQ_URL={{ rabbitmq_url }}
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - virtualenv'
+        insertbefore: BOF
+        create: yes
+
+    - name: template systemd unit file
+      ansible.builtin.template:
+        src: templates/distributed_node.service.j2
+        dest: "/etc/systemd/system/distributed_node_{{ item }}.service"
+        owner: root
+        group: root
+        mode: 0755
+      with_sequence: start=1 end=10
+      tags:
+        - enlarge
+        - update
+
+    - name: template systemd unit file
+      ansible.builtin.template:
+        src: templates/distributed_node_env.j2
+        dest: "/etc/distributed_node_env_{{ item }}"
+        owner: root
+        group: root
+        mode: 0755
+      with_sequence: start=1 end=10
+      tags:
+        - enlarge
+        - update
+
+    - name: Make sure distributed node is running
+      ansible.builtin.systemd:
+        state: started
+        daemon-reload: true
+        name: "distributed_node_{{ item }}"
+        enabled: true
+        no_block: true
+      tags:
+        - update
+      with_sequence: start=1 end=10
+      tags:
+        - enlarge
+
+    - name: Restart node
+      ansible.builtin.systemd:
+        name: "distributed_node_{{item}}"
+        state: restarted
+        no_block: true
+      tags:
+        - restart
+        - update
+      with_sequence: start=1 end=10
